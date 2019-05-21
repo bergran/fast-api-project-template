@@ -202,7 +202,7 @@ Fixtures:
 
 * session: database session, you can get it on `self.session`
 * client: client to make request, you can get it on `self.client`
-* base: base del, you can get it on `self.session`
+* base: base del, you can get it on `self.Base`
 
 
 ### Framework origin
