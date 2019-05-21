@@ -1,4 +1,4 @@
-# FastApi base project
+# FastApi base project
 
 This is a base project to start project very easy fast api app from FastApi.
 
@@ -8,7 +8,7 @@ This is a base project to start project very easy fast api app from FastApi.
 To initialize project is necessary to install cookie-cutter.
 
 * `pip install cookiecutter` # install cookiecutter 
-* `cookiecutter ` # download project template. It will prompt project name.
+* `cookiecutter https://github.com/bergran/fast-api-project-template` # download project template. It will prompt project name.
 * `pip install -r requirements.txt` # install libraries to getting started
 
 To check template works, it have 2 endpoints and 5 tests
