@@ -1,6 +1,6 @@
 # FastApi base project
 
-This is a base project to start project very easy fast api app from FastApi.
+This is a base project to start project very easy fast api app from FastApi with python >3.6 version.
 
 
 ### How to install?
