@@ -24,6 +24,7 @@ touch urls.py
 
 make_module views
 make_module serializers
+make_module constants
 make_module models
 make_module tests
 make_module depends
