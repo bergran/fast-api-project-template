@@ -14,14 +14,14 @@ def database_middleware(app):
     app_config = app.config
 
     engine = create_engine(dsn)
-    session = sessionmaker(autocommit=False, autoflush=False, bind=engine)()
+    session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     app_config.SQLALCHEMY_DATABASE_URI = dsn
 
     async def db_session_middleware(request: Request, call_next):
         response = Response("Internal server error", status_code=500)
         try:
-            request.state.db = session
+            request.state.db = session()
             response = await call_next(request)
         finally:
             request.state.db.rollback()
