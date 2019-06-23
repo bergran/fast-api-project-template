@@ -4,10 +4,27 @@ version: '3.1'
 services:
 
   db:
+    container_name: fastapi-db
     image: postgres
     environment:
       POSTGRES_PASSWORD: fastapi
       POSTGRES_USER: fastapi
       POSTGRES_DB: fastapi
+
+  app:
+    container_name: fastapi-app
+    image: python:3.7.3-stretch
+    working_dir: /code
+    environment:
+      database: fastapi
+      username: fastapi
+      password: fastapi
+      host: db
+      PYTHONPATH: /code
     ports:
-      - 5432:5432
+      - 8000:8000
+    depends_on:
+      - db
+    volumes:
+      - ../:/code
+    command: sh deployments/run.sh

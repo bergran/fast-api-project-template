@@ -18,6 +18,14 @@ To check template works, it have 2 endpoints and 5 tests
 
 
 execute `pytest`.
+
+
+### How to deploy it?
+
+- docker-compose -f deployments/docker-compose.yml -p <Nombre del proyecto> up -d
+
+This command runs db and app into 2 containers and it does to has another context. This is
+very interesant because if you are builting microservices it will run as separated environments
  
  
 ### How to run project?
