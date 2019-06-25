@@ -44,6 +44,7 @@ if not SECRET_KEY:
 
 # ~~~~~ APPS ~~~~~
 APPS = [
+    'health_check',
     'token',
     'hello_world'
 ]
