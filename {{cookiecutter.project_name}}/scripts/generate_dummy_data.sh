@@ -1,0 +1,1 @@
+echo "Add some generator script here :D"
