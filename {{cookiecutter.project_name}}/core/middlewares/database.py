@@ -1,20 +1,14 @@
 # -*- coding: utf-8 -*-
-import os
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from starlette.requests import Request
 from starlette.responses import Response
 
-from core.utils.init_db import get_dsn
+from core.db.setup import setup_database
 
 
 def database_middleware(app):
-    dsn = get_dsn(app.config)
     app_config = app.config
-
-    engine = create_engine(dsn)
-    session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    session, dsn = setup_database(app_config)
 
     app_config.SQLALCHEMY_DATABASE_URI = dsn
 
