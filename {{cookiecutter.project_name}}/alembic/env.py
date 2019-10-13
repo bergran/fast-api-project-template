@@ -30,9 +30,12 @@ target_metadata = []
 for app in config_app.APPS:
     i = importlib.import_module('apps.{}.models'.format(app))
 
-    if hasattr(i, '__all__'):
-        for model in i.__all__:
-            target_metadata.append(getattr(i, model).metadata)
+    if len(target_metadata) > 0:
+        continue
+    elif hasattr(i, '__all__') and len(i.__all__) > 0:
+        model = i.__all__[0]
+        target_metadata.append(getattr(i, model).metadata)
+
 
 # target_metadata = [Base.metadata]
 
