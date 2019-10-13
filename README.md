@@ -213,6 +213,10 @@ Fixtures:
 * base: base del, you can get it on `self.Base`
 
 
+### Generate dummy data
+
+In this template it's installed factory-boy library so if you want to do it, go [here](https://factoryboy.readthedocs.io/en/latest/orms.html#managing-sessions)
+
 ### Framework origin
 
 [FastApi](https://fastapi.tiangolo.com/) docs
