@@ -217,6 +217,96 @@ Fixtures:
 
 In this template it's installed factory-boy library so if you want to do it, go [here](https://factoryboy.readthedocs.io/en/latest/orms.html#managing-sessions)
 
+
+### Oauth2
+
+It's implemented oauth2 (not all methods) token authorization and check if the app has enough scope to get or set data,
+at this moment is in beta version. 
+
+To start, this should add some migrations to your service to add on your database, these models are:
+
+* App
+* Access Token
+
+#### App
+
+It's the instance which you are gonna log in and access to api.
+
+Properties are:
+* name: app name. String
+* created: when it was created. Datetime
+* modified: when it was modified (not implemented signal). Datetime
+* client_id: it's the id to get access token. String uuid.
+* client_secret: it's the secret to get access token. String uuid.
+
+#### AccessToken
+
+It's the instance which will storage access token and scopes to get access api.
+
+Properties are:
+* created: when it was created. Datetime
+* modified: when it was modified (not implemented signal). Datetime
+* app: it's the foreign key to make relation with app. ForeignKey.
+* scopes: are to see what scopes are allowed to the app. Array[string]
+* access_token: it is the token which the app will authorize.
+
+#### How to play?
+
+1. We create a new app. it does not need to set client_id or client_secret
+it will set uuid4 by default (recomended unless need it do manual).
+2. make a post request to `/token` with the next payload:
+    ```
+    {
+        "client_id": <client_id_app>,
+        "client_secret": <client_secret_app>,
+        "scopes": [], # these scope it's gonna be setting on app settings config by default. [optional]
+        "grant_type": "client_credentials", # method to login app
+    }
+    ```
+
+    headers
+    
+    ```
+    {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    ```
+
+    response: status code `200`
+    
+    ```
+    {
+        "access_token": access_token.access_token, # String uuid
+        "token_type": "bearer"
+    }
+    ```
+3. With the access token, now we can access to `/me`. Method get.
+    
+    headers
+    ```
+    {
+       "authorization": "bearer <access token>"
+    }
+    ```
+   
+   response status code `200`
+   
+   ```
+    {
+        "name": <app name>,
+        "created": <app created>,
+        "modified": <app modfied>
+    }
+   ```
+
+#### depends
+
+There are 2 depends to get the app token
+
+1. get_app_object_access: Get app from client_id and client_secret.
+2. get_app_object_scopes: Get app from authorization header and check it scopes given to the app.
+
+
 ### Framework origin
 
 [FastApi](https://fastapi.tiangolo.com/) docs
