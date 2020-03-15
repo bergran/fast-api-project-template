@@ -1,6 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from starlette.middleware.cors import CORSMiddleware
+from starlette.responses import PlainTextResponse
 
 from core import config
 from core import urls
@@ -32,6 +34,11 @@ app.include_router(urls.router)
 
 app.middleware('http')(settings_middleware(app))
 app.middleware('http')(database_middleware(app))
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return PlainTextResponse(str(exc), status_code=400)
 
 
 if __name__ == "__main__":
