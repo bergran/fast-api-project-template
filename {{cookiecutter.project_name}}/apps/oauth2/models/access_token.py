@@ -2,17 +2,19 @@
 import datetime
 from uuid import uuid4
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Table
 from sqlalchemy.dialects.postgresql import ARRAY
 
+from core.db.base import metadata
 
-from core.db.base import Base
 
-
-class AccessToken(Base):
-    id = Column(Integer, primary_key=True)
-    created = Column(DateTime, default=datetime.datetime.utcnow)
-    modified = Column(DateTime, default=datetime.datetime.utcnow)
-    app = Column(Integer, ForeignKey('app.id'))
-    scopes = Column(ARRAY(String), default=[])
-    access_token = Column(String(36), default=uuid4)
+AccessToken = Table(
+    'AccessToken',
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("created", DateTime, default=datetime.datetime.utcnow),
+    Column("modified", DateTime, default=datetime.datetime.utcnow),
+    Column("app", Integer, ForeignKey('App.id')),
+    Column("scopes", ARRAY(String), default=[]),
+    Column("access_token", String(36), default=uuid4),
+)

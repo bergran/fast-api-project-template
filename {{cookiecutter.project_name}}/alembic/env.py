@@ -1,14 +1,17 @@
-import importlib
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
+from core.db.base import metadata
 from core.utils.init_config import init_config
 from core.utils.init_db import get_dsn
+
+# Add here yours models
+
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use.
 
 config = context.config
 config_app = init_config()
@@ -17,28 +20,11 @@ dsn = get_dsn(config_app)
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
-print('qwer', dsn)
+
 # set endpoint from config
 config.set_main_option('sqlalchemy.url', dsn)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-
-target_metadata = []
-for app in config_app.APPS:
-    i = importlib.import_module('apps.{}.models'.format(app))
-
-    if len(target_metadata) > 0:
-        continue
-    elif hasattr(i, '__all__') and len(i.__all__) > 0:
-        model = i.__all__[0]
-        target_metadata.append(getattr(i, model).metadata)
-
-
-# target_metadata = [Base.metadata]
-
+target_metadata = [metadata]
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -53,7 +39,7 @@ def run_migrations_offline():
     and not an Engine, though an Engine is acceptable
     here as well.  By skipping the Engine creation
     we don't even need a DBAPI to be available.
-
+®
     Calls to context.execute() here emit the given string to the
     script output.
 

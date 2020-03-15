@@ -1,27 +1,32 @@
+import asyncio
 import logging
 import os
 
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, drop_database, create_database
 from starlette.testclient import TestClient
+
+from core.db.start_database import start_database
+from core.utils.init_db import get_dsn
 
 logger = logging.getLogger('fixture')
 logger.setLevel(logging.INFO)
 
 
+pytestmark = pytest.mark.asyncio
+
+
 def pytest_sessionstart(session):
     os.environ.setdefault('TEST_RUN', '1')
     from main import app
-    _create_database(app.config.SQLALCHEMY_DATABASE_URI)
+    _create_database(get_dsn(app.config))
     _create_database_connection(app)
 
 
 def pytest_sessionfinish(session):
     os.environ.setdefault('TEST_RUN', '1')
     from main import app
-    _delete_database(app.config.SQLALCHEMY_DATABASE_URI)
+    _delete_database(get_dsn(app.config))
 
 
 def _create_database(dsn):
@@ -37,20 +42,25 @@ def _create_database(dsn):
     create_database(dsn)
 
 
+@pytest.yield_fixture(scope='class')
+def event_loop(request):
+    loop = asyncio.get_event_loop()
+    yield loop
+    loop.close()
+
+
 @pytest.fixture(scope="class")
-def get_session_and_client_fixture(request):
+async def get_session_and_client_fixture(request):
     from main import app
     # Set TEST_RUN environment to tell app that we are running under test environment to connect dummy test
     os.environ.setdefault('TEST_RUN', '1')
 
     from core.db.base import Base
 
-    engine = create_engine(app.config.SQLALCHEMY_DATABASE_URI)
-    session = sessionmaker(autocommit=False, autoflush=True, bind=engine)()
-
-    request.cls.session = session
+    await start_database(app)
     request.cls.client = TestClient(app)
     request.cls.Base = Base
+    request.cls.database = app.database
 
 
 def _delete_database(dsn):
@@ -60,11 +70,7 @@ def _delete_database(dsn):
 
 
 def _create_database_connection(app):
-    from core.db.base import Base
-
-    engine = create_engine(app.config.SQLALCHEMY_DATABASE_URI)
-    session = sessionmaker(autocommit=False, autoflush=True, bind=engine)()
+    start_database(app)
 
     import subprocess
     subprocess.call("cd {} && sh scripts/migrate.sh head".format(app.config.BASE_DIR), shell=True)
-    return session, Base
