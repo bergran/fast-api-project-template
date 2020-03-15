@@ -17,7 +17,6 @@ dsn = get_dsn(config_app)
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
-print('qwer', dsn)
 # set endpoint from config
 config.set_main_option('sqlalchemy.url', dsn)
 
