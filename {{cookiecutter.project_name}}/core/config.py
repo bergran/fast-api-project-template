@@ -89,8 +89,16 @@ EMAILS_ENABLED = SMTP_HOST and SMTP_PORT and EMAILS_FROM_EMAIL
 DATABASES = {
     'type': os.environ.get('type', 'postgresql'),
     'database': os.environ.get('database', 'fastapi'),
-    'username': os.environ.get('username', 'fastapi'),
-    'password': os.environ.get('password', 'fastapi'),
+    'username': os.environ.get('username', 'myproject'),
+    'password': os.environ.get('password', 'myproject'),
     'host': os.environ.get('host', 'localhost'),
     'port': os.environ.get('port', 5432)
+}
+
+
+# ~~~~~ OAUTH 2 ~~~~~
+
+SCOPES = {
+    'read': 'Read',
+    'write': 'Write'
 }
